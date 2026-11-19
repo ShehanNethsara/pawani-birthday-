@@ -19,7 +19,7 @@ img { -webkit-user-drag:none; }
 .dark   { background:var(--dk); color:#ffd1e3; }
 .mid    { background:linear-gradient(160deg,#ff9ac1,#ff5c97 60%,#c93a78); color:#fff; }
 .pinkbg { background:linear-gradient(180deg,#ffe3ee,#ffb3cf); color:#8a1c52; }
-.neon   { background:radial-gradient(ellipse 80% 60% at 50% 30%,#2a0a3a,#0b0414 75%); color:#ffd1f0; }
+.sketchbg { background:radial-gradient(ellipse 80% 60% at 50% 30%,#5a4536,#241a14 78%); color:#f3e6d3; }
 .rosebg { background:radial-gradient(ellipse 80% 60% at 50% 30%,#7a1747,#2b0a1e 78%); color:#ffd9ea; }
 canvas.fx { position:absolute; inset:0; width:100%; height:100%; }
 #cf { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:30; }
@@ -75,21 +75,16 @@ button { font:inherit; border:0; border-radius:30px; padding:12px 26px; backgrou
   border-bottom-width:14px; opacity:.6; z-index:1; animation:up linear infinite; box-shadow:0 4px 12px rgba(0,0,0,.25); will-change:transform; }
 @keyframes up { to { transform:translateY(-130vh) rotate(var(--r)); } }
 
-/* ---------- NEON pencil art ---------- */
-.nt { color:#fff; text-shadow:0 0 8px #ff2e97, 0 0 24px #ff2e97, 0 0 48px #b400ff; }
-.nframe { position:relative; width:min(300px,76vw); aspect-ratio:3/4; margin:16px auto 8px; border-radius:14px; background:#0a0212; cursor:pointer;
-  animation:nglow 3s ease-in-out infinite alternate; }
-@keyframes nglow {
-  from { box-shadow:0 0 0 3px #ff2e97, 0 0 22px #ff2e97, 0 0 55px rgba(255,46,151,.65), inset 0 0 22px rgba(255,46,151,.35); }
-  to   { box-shadow:0 0 0 3px #00e5ff, 0 0 22px #00e5ff, 0 0 55px rgba(0,229,255,.65), inset 0 0 22px rgba(0,229,255,.35); }
-}
-.nframe canvas, .nframe img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 25%; border-radius:14px; }
-.nframe img { opacity:0; transition:opacity 1.4s; }
+/* ---------- realistic pencil sketch ---------- */
+.st { color:#f7ecd9; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+.nframe { position:relative; width:min(300px,76vw); aspect-ratio:3/4; margin:16px auto 8px; background:#f7f2e8; cursor:pointer;
+  border:8px solid #fffaf0; border-radius:4px; transform:rotate(-1.5deg);
+  box-shadow:0 14px 34px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.15); }
+.nframe canvas, .nframe img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 25%; }
+.nframe img { opacity:0; transition:opacity 1.6s; }
 .nframe.color img { opacity:1; }
-.nframe canvas { transition:opacity 1.2s; }
-.nframe.color canvas { mix-blend-mode:screen; opacity:.85; }
-#pencil { position:absolute; left:0; top:0; width:14px; height:14px; border-radius:50%; background:#fff; z-index:3; pointer-events:none;
-  box-shadow:0 0 10px 4px #ff2e97, 0 0 28px 10px #00e5ff; transition:opacity .4s; will-change:transform; }
+#pencil { position:absolute; left:0; top:0; width:28px; height:28px; font-size:28px; line-height:28px; z-index:3; pointer-events:none;
+  filter:drop-shadow(2px 3px 3px rgba(0,0,0,.4)); transition:opacity .4s; will-change:transform; }
 .nframe.color #pencil { opacity:0; }
 
 /* ---------- rose frame slideshow ---------- */

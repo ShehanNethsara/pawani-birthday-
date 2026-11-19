@@ -21,8 +21,8 @@ function pickPhotos(done) {
 var MSG = "Chuti Manika... 💖\n\nYou are the best thing that ever happened to me. You turn my ordinary days into beautiful ones, and you make my heart smile without even trying.\n\nOn your special day, I wish you endless happiness, laughter and every dream you hold close to your heart 🌹\n\nI love you so much! ❤️";
 var CAP = ["Our first memory", "That smile 😍", "Cutest moment", "Forever favourite", "My happy place", "Pure magic", "Just you", "Always us"];
 var KC = ["You light up every room", "My favourite smile", "Pretty as always", "Moments I will never forget", "You and me, always", "My sunshine", "Simply beautiful", "My heart is yours", "Every day with you is a gift", "Look at that glow", "My favourite person", "Forever and always"];
-var SKCAP = ["Every line, drawn with love 💗", "My favourite face in the world", "Even in neon, you shine ✨", "Sketched by my heart", "Beautiful in every colour", "Simply perfect"];
-var SKI = [0, 4, 8, 12, 20, 30];   // photos used on the neon page (0 = first photo, 45 = last)
+var SKCAP = ["Every line, drawn with love 💗", "My favourite face in the world", "Even on paper, you shine ✨", "Sketched by my heart", "Beautiful in every colour", "Simply perfect"];
+var SKI = [0, 4, 8, 12, 20, 30];   // photos used on the sketch page (0 = first photo, 45 = last)
 
 /* funny Yes / No texts */
 var NOQ = ["Wrong button! 😂", "Your finger slipped, right? 😏", "Are you sure about that? 🥺", "Think again, Chuti Manika... 🤨",
@@ -268,17 +268,9 @@ function typeIt() {
   (function t() { el.textContent = MSG.slice(0, i++); if (i <= MSG.length) tw = setTimeout(t, 55); })();
 }
 
-/* ======================= NEON PENCIL ART ======================= */
-var skToken = 0, SW = 330, SH = 440, BGN = "#0a0212";
-var PAL = [                                   // colour schemes (changes with every photo)
-  [[255, 46, 151], [180, 0, 255], [0, 229, 255]],     // pink  > purple > cyan
-  [[0, 229, 255], [0, 255, 170], [255, 255, 90]],     // cyan  > green  > yellow
-  [[255, 130, 0], [255, 46, 151], [170, 0, 255]]      // orange> pink   > violet
-];
-function lerp3(p, t) {
-  var s = t * 2, i = s >= 1 ? 1 : 0, f = s - i, a = p[i], b = p[i + 1];
-  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
-}
+/* ======================= REALISTIC PENCIL SKETCH ======================= */
+var skToken = 0, SW = 330, SH = 440, BGN = "#f7f2e8";
+
 function boxBlur(src, w, h, r) {
   var tmp = new Float32Array(w * h), out = new Float32Array(w * h), x, y, acc, n = 2 * r + 1;
   for (y = 0; y < h; y++) {
@@ -297,41 +289,28 @@ function boxBlur(src, w, h, r) {
   }
   return out;
 }
-function shrink(src, n) {                     // halves the canvas n times (cheap blur for the glow)
-  var c = src;
-  for (var i = 0; i < n; i++) {
-    var t = document.createElement("canvas"); t.width = Math.max(1, c.width >> 1); t.height = Math.max(1, c.height >> 1);
-    var x = t.getContext("2d"); x.imageSmoothingEnabled = true; x.drawImage(c, 0, 0, t.width, t.height); c = t;
-  }
-  return c;
-}
 function cropTo(img, x) {
   var iw = img.naturalWidth, ih = img.naturalHeight;
   var cw = Math.min(iw, ih * SW / SH), ch = cw * SH / SW;
   x.drawImage(img, (iw - cw) / 2, (ih - ch) * .25, cw, ch, 0, 0, SW, SH);
 }
-function makeNeon(img, k) {                   // photo -> glowing neon line art (returns a canvas)
+function makeSketch(img) {                    // photo -> realistic graphite pencil sketch
   var s = document.createElement("canvas"); s.width = SW; s.height = SH;
   var x = s.getContext("2d"); cropTo(img, x);
   var d = x.getImageData(0, 0, SW, SH), px = d.data, n = SW * SH, g = new Float32Array(n), inv = new Float32Array(n), i;
   for (i = 0; i < n; i++) { g[i] = .299 * px[i * 4] + .587 * px[i * 4 + 1] + .114 * px[i * 4 + 2]; inv[i] = 255 - g[i]; }
-  var b = boxBlur(boxBlur(inv, SW, SH, 3), SW, SH, 3), pal = PAL[k % PAL.length], lut = [];
-  for (i = 0; i < 256; i++) lut.push(lerp3(pal, i / 255));
+  var b = boxBlur(boxBlur(inv, SW, SH, 4), SW, SH, 4);
   for (i = 0; i < n; i++) {
-    var v = b[i] >= 254 ? 255 : Math.min(255, g[i] * 255 / (255 - b[i]));
-    var a = Math.max(0, Math.min(1, (255 - v - 10) / 105)) * 1.1;
-    var gx = (i % SW) / SW, gy = ((i / SW) | 0) / SH;
-    var c = lut[Math.min(255, Math.floor((gx * .45 + gy * .55) * 255))];
-    px[i * 4] = Math.min(255, c[0] * a); px[i * 4 + 1] = Math.min(255, c[1] * a); px[i * 4 + 2] = Math.min(255, c[2] * a); px[i * 4 + 3] = 255;
+    var v = b[i] >= 254 ? 255 : Math.min(255, g[i] * 255 / (255 - b[i]));   // colour-dodge = pencil lines
+    v = v * .82 + g[i] * .18;                                              // soft shading
+    var t = Math.pow(v / 255, 1.5), gr = (Math.random() - .5) * 12;        // darker strokes + paper grain
+    px[i * 4]     = Math.max(0, Math.min(255, 38 + 209 * t + gr));
+    px[i * 4 + 1] = Math.max(0, Math.min(255, 38 + 204 * t + gr));
+    px[i * 4 + 2] = Math.max(0, Math.min(255, 44 + 188 * t + gr));
+    px[i * 4 + 3] = 255;
   }
   x.putImageData(d, 0, 0);
-  var o = document.createElement("canvas"); o.width = SW; o.height = SH;   // lines + glow
-  var ox = o.getContext("2d"); ox.fillStyle = BGN; ox.fillRect(0, 0, SW, SH);
-  ox.globalCompositeOperation = "lighter"; ox.drawImage(s, 0, 0);
-  ox.imageSmoothingEnabled = true;
-  var GL = [[2, .8], [3, .9], [4, .9]];
-  GL.forEach(function (a) { ox.globalAlpha = a[1]; ox.drawImage(shrink(s, a[0]), 0, 0, SW, SH); });
-  ox.globalAlpha = 1; return o;
+  return s;
 }
 function startSketch(k) {
   var token = ++skToken, cv = $("#sk"), fr = $("#frame"), pen = $("#pencil"), colorImg = $("#skc");
@@ -342,10 +321,10 @@ function startSketch(k) {
   img.onload = function () {
     if (token != skToken) return;
     var neon;
-    try { neon = makeNeon(img, k); } catch (e) {          // e.g. file:// blocks pixel access
+    try { neon = makeSketch(img); } catch (e) {          // e.g. file:// blocks pixel access
       neon = document.createElement("canvas"); neon.width = SW; neon.height = SH;
       cropTo(img, neon.getContext("2d"));
-      cv.style.filter = "grayscale(1) contrast(1.6) sepia(1) hue-rotate(290deg) saturate(6) brightness(1.1)";
+      cv.style.filter = "grayscale(1) contrast(1.5) brightness(1.1)";
     }
     colorImg.src = IMGS[idx];
     var BANDS = 44, bh = SH / BANDS, DUR = 4200, t0 = performance.now();
@@ -359,7 +338,7 @@ function startSketch(k) {
       var rect = cv.getBoundingClientRect(), fr0 = fr.getBoundingClientRect();
       var px = (rtl ? SW - w : w) / SW * rect.width + (rect.left - fr0.left);
       var py = (top + bh * .5) / SH * rect.height + (rect.top - fr0.top);
-      pen.style.transform = "translate(" + (px - 7) + "px," + (py - 7) + "px)";
+      pen.style.transform = "translate(" + (px - 4) + "px," + (py - 25 + Math.sin(now / 45) * 1.5) + "px)";
       if (p < 1) requestAnimationFrame(frame);
       else setTimeout(function () {
         if (token != skToken) return;
