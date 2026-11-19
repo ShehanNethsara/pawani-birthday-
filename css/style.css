@@ -1,0 +1,155 @@
+:root { --p1:#ff6fa5; --dk:#0b0408; box-sizing:border-box; }
+* { box-sizing:inherit; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; margin:0; background:var(--dk); font-family:Poppins,sans-serif; overflow:hidden; }
+h1, h2 { font-family:Pacifico,cursive; font-weight:400; margin:0 0 12px; }
+h1 { font-size:clamp(30px,9vw,58px); }
+h2 { font-size:clamp(22px,6vw,34px); }
+.small { letter-spacing:3px; font-size:12px; }
+img { -webkit-user-drag:none; }
+
+/* ---------- scenes ---------- */
+.scene { position:absolute; inset:0; display:flex; opacity:0; visibility:hidden; transform:scale(.97);
+  transition:opacity .7s, transform .7s, visibility .7s; text-align:center;
+  padding:34px 16px calc(84px + env(safe-area-inset-bottom,0px)); overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
+.scene.on { opacity:1; visibility:visible; transform:none; z-index:2; }
+.scene:not(.on) * { animation-play-state:paused !important; }
+.box { margin:auto; width:100%; max-width:560px; position:relative; z-index:3; }
+.box.bottom { margin:auto auto 0; pointer-events:none; text-shadow:0 2px 12px rgba(0,0,0,.7); }
+.light  { background:radial-gradient(ellipse 70% 55% at 50% 35%,#ffb3cf,#ffe3ee 60%,#fff5f9); color:#8a1c52; }
+.dark   { background:var(--dk); color:#ffd1e3; }
+.mid    { background:linear-gradient(160deg,#ff9ac1,#ff5c97 60%,#c93a78); color:#fff; }
+.pinkbg { background:linear-gradient(180deg,#ffe3ee,#ffb3cf); color:#8a1c52; }
+.neon   { background:radial-gradient(ellipse 80% 60% at 50% 30%,#2a0a3a,#0b0414 75%); color:#ffd1f0; }
+.rosebg { background:radial-gradient(ellipse 80% 60% at 50% 30%,#7a1747,#2b0a1e 78%); color:#ffd9ea; }
+canvas.fx { position:absolute; inset:0; width:100%; height:100%; }
+#cf { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:30; }
+
+/* ---------- buttons & nav ---------- */
+button { font:inherit; border:0; border-radius:30px; padding:12px 26px; background:var(--p1); color:#fff; font-weight:600;
+  cursor:pointer; box-shadow:0 6px 18px rgba(138,28,82,.35); }
+.light button, .pinkbg button { background:#ff4d8d; }
+#next { position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:20; display:none; }
+#dots { position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); left:0; right:0; display:flex; justify-content:center; gap:5px; z-index:20; pointer-events:none; }
+#dots i { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.45); }
+#dots i.a { background:#ff6fa5; box-shadow:0 0 8px #ff6fa5; }
+.cap { font-size:16px; min-height:48px; }
+
+/* ---------- floating hearts & falling rose petals (above the pages) ---------- */
+.bigheart { font-size:clamp(90px,28vw,130px); display:inline-block; animation:hb 2.6s ease-in-out infinite; filter:drop-shadow(0 0 30px #ff6fa5); }
+@keyframes hb { 0%,100%{transform:scale(1)} 15%{transform:scale(1.15)} 30%{transform:scale(1)} 45%{transform:scale(1.1)} }
+.fh { position:fixed; bottom:-30px; z-index:5; pointer-events:none; animation:rise linear forwards; will-change:transform; }
+@keyframes rise { to { transform:translateY(-115vh) rotate(40deg); opacity:0; } }
+.petal { position:fixed; top:-50px; z-index:5; pointer-events:none; animation:pfall linear forwards; will-change:transform; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
+@keyframes pfall {
+  0%   { transform:translate(0,-50px) rotate(0deg); }
+  50%  { transform:translate(var(--dx),55vh) rotate(200deg); }
+  100% { transform:translate(calc(var(--dx) * -.6),112vh) rotate(400deg); }
+}
+
+/* ---------- funny yes / no ---------- */
+.ynemo { font-size:clamp(70px,22vw,110px); display:inline-block; animation:hb 2s ease-in-out infinite; }
+#yn { position:relative; height:190px; margin-top:10px; }
+#yn button { position:absolute; top:70px; }
+#yesb { left:14%; transition:transform .3s; }
+#nob { left:60%; z-index:2; background:#8f7a86 !important; transition:left .25s, top .25s; }
+
+/* ---------- 3D carousel ---------- */
+.persp { perspective:900px; height:280px; display:flex; align-items:center; justify-content:center; margin:10px 0; }
+.ring { position:relative; width:100px; height:140px; transform-style:preserve-3d; animation:spin 26s linear infinite; }
+.ring img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 25%;
+  border:4px solid #fff; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.3); }
+@keyframes spin { to { transform:rotateY(-360deg); } }
+
+/* ---------- polaroid board ---------- */
+#board { display:grid; grid-template-columns:1fr 1fr; gap:18px 14px; padding:10px 4px; }
+.polaroid { margin:0; background:#fff; padding:6px 6px 0; transform:rotate(var(--r)); box-shadow:0 6px 16px rgba(138,28,82,.3); cursor:pointer; transition:transform .4s; }
+.polaroid img { display:block; width:100%; height:150px; object-fit:cover; object-position:50% 25%; }
+.polaroid figcaption { font-family:Pacifico,cursive; font-size:14px; padding:8px 0; color:#c93a78; }
+.polaroid.big { transform:scale(1.4) rotate(0deg); position:relative; z-index:5; }
+.scene.on .polaroid { animation:pop .6s both; animation-delay:calc(var(--i) * .1s); }
+@keyframes pop { from { opacity:0; transform:scale(.3) rotate(-30deg); } }
+
+/* ---------- message ---------- */
+#type { min-height:300px; font-size:18px; line-height:1.7; background:rgba(255,255,255,.22); border-radius:20px; padding:22px; white-space:pre-line; }
+.pol { position:absolute; bottom:-200px; width:84px; height:100px; object-fit:cover; object-position:50% 25%; border:5px solid #fff;
+  border-bottom-width:14px; opacity:.6; z-index:1; animation:up linear infinite; box-shadow:0 4px 12px rgba(0,0,0,.25); will-change:transform; }
+@keyframes up { to { transform:translateY(-130vh) rotate(var(--r)); } }
+
+/* ---------- NEON pencil art ---------- */
+.nt { color:#fff; text-shadow:0 0 8px #ff2e97, 0 0 24px #ff2e97, 0 0 48px #b400ff; }
+.nframe { position:relative; width:min(300px,76vw); aspect-ratio:3/4; margin:16px auto 8px; border-radius:14px; background:#0a0212; cursor:pointer;
+  animation:nglow 3s ease-in-out infinite alternate; }
+@keyframes nglow {
+  from { box-shadow:0 0 0 3px #ff2e97, 0 0 22px #ff2e97, 0 0 55px rgba(255,46,151,.65), inset 0 0 22px rgba(255,46,151,.35); }
+  to   { box-shadow:0 0 0 3px #00e5ff, 0 0 22px #00e5ff, 0 0 55px rgba(0,229,255,.65), inset 0 0 22px rgba(0,229,255,.35); }
+}
+.nframe canvas, .nframe img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 25%; border-radius:14px; }
+.nframe img { opacity:0; transition:opacity 1.4s; }
+.nframe.color img { opacity:1; }
+.nframe canvas { transition:opacity 1.2s; }
+.nframe.color canvas { mix-blend-mode:screen; opacity:.85; }
+#pencil { position:absolute; left:0; top:0; width:14px; height:14px; border-radius:50%; background:#fff; z-index:3; pointer-events:none;
+  box-shadow:0 0 10px 4px #ff2e97, 0 0 28px 10px #00e5ff; transition:opacity .4s; will-change:transform; }
+.nframe.color #pencil { opacity:0; }
+
+/* ---------- rose frame slideshow ---------- */
+.rframe { position:relative; width:min(300px,74vw); aspect-ratio:3/4; margin:30px auto 14px; padding:10px; border-radius:18px;
+  background:linear-gradient(135deg,#ffd9e8,#ff8fb8 35%,#fff0f6 60%,#ff6fa5); box-shadow:0 0 45px rgba(255,111,165,.55), 0 14px 30px rgba(0,0,0,.4); }
+.slides { position:relative; width:100%; height:100%; overflow:hidden; border-radius:10px; background:#1a0612; }
+.sl { position:absolute; inset:0; background-size:cover; background-position:center 25%; will-change:transform, clip-path; }
+.rose { position:absolute; transform:translate(-50%,-50%); z-index:4; pointer-events:none; animation:sway 3s ease-in-out infinite alternate;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.45)); }
+@keyframes sway {
+  from { transform:translate(-50%,-50%) rotate(-12deg) scale(1); }
+  to   { transform:translate(-50%,-50%) rotate(12deg) scale(1.12); }
+}
+
+/* ---------- cake ---------- */
+.cake { margin:30px 0; }
+.candles { display:flex; justify-content:center; gap:22px; margin-bottom:-4px; }
+.candle { width:12px; height:50px; background:linear-gradient(#fff,#ffb3d1); border-radius:3px; position:relative; cursor:pointer; }
+.candle:before { content:""; position:absolute; top:-22px; left:-2px; width:16px; height:22px;
+  background:radial-gradient(#fff 10%,#ffcf40 40%,#ff6a00); border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  animation:fl .3s infinite alternate; box-shadow:0 0 18px #ffb300; }
+.candle.off:before { display:none; }
+@keyframes fl { to { transform:scale(1.15,.9) rotate(4deg); } }
+.tier { margin:auto; border-radius:12px; }
+.t1 { width:150px; height:46px; background:#ff8fb8; }
+.t2 { width:210px; height:56px; background:#ff5c97; }
+.t3 { width:min(270px,80vw); height:46px; background:#c93a78; }
+#wish { font-size:18px; min-height:56px; }
+
+/* ---------- love letter ---------- */
+.env { position:relative; width:min(300px,80vw); height:200px; margin:300px auto 40px; background:#ff8fb8; border-radius:6px; cursor:pointer;
+  box-shadow:0 10px 30px rgba(138,28,82,.35); animation:hb 3s ease-in-out infinite; }
+.env.open { animation:none; }
+.flap { position:absolute; top:0; left:0; width:100%; height:110px; background:#ff5c97; clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top; transition:transform .6s, z-index 0s .3s; z-index:4; }
+.env.open .flap { transform:rotateX(180deg); z-index:0; }
+.front { position:absolute; inset:0; background:#ff7fb0; clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%); z-index:3; border-radius:6px; }
+.seal { position:absolute; left:50%; top:96px; transform:translate(-50%,-50%); font-size:34px; z-index:5; transition:opacity .4s; }
+.env.open .seal { opacity:0; }
+.paperl { position:absolute; left:5%; width:90%; height:290px; bottom:10px; background:#fffafc; border-radius:8px; padding:16px; z-index:1;
+  color:#8a1c52; font-size:13px; line-height:1.55; text-align:left; transition:transform .9s .5s; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+.env.open .paperl { transform:translateY(-190px); z-index:2; }
+.sign { font-family:Pacifico,cursive; font-size:16px; color:#c93a78; }
+
+/* ---------- catch hearts game ---------- */
+.bar { height:10px; background:rgba(255,255,255,.3); border-radius:10px; margin:6px 0 10px; overflow:hidden; }
+.bar i { display:block; height:100%; width:0; background:#fff; border-radius:10px; transition:width .3s; }
+#game { position:relative; height:52vh; min-height:280px; border-radius:20px; background:rgba(255,255,255,.15); overflow:hidden; touch-action:manipulation; }
+.gh { position:absolute; top:0; font-size:40px; cursor:pointer; user-select:none; animation:fall linear forwards; will-change:transform; }
+@keyframes fall { from { transform:translateY(-60px); } to { transform:translateY(var(--h,400px)); } }
+.fx2 { position:absolute; font-size:30px; pointer-events:none; animation:fxo .6s forwards; }
+@keyframes fxo { to { transform:translateY(-40px) scale(2); opacity:0; } }
+.win { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; font-size:19px; }
+.win span { font-size:70px; animation:hb 1.5s infinite; }
+
+/* ---------- finale with rose wreath ---------- */
+.wreath { position:relative; width:200px; height:200px; margin:0 auto 14px; }
+.circle { position:absolute; left:25px; top:25px; width:150px; height:150px; border-radius:50%; overflow:hidden; border:4px solid #ff6fa5; box-shadow:0 0 40px #ff6fa5; }
+.circle img { width:100%; height:100%; object-fit:cover; object-position:50% 25%; transition:opacity .5s; }
+.wr-ring { position:absolute; inset:0; animation:spinw 24s linear infinite; }
+.wr-ring span { position:absolute; left:50%; top:50%; font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+@keyframes spinw { to { transform:rotate(360deg); } }
+.glow { text-shadow:0 0 25px #ff6fa5; }

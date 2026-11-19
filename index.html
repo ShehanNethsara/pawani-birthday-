@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Happy Birthday Chuti Manika 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="dots"></div>
+<canvas id="cf"></canvas>
+
+<!-- 1: Gate -->
+<section class="scene light" data-s="gate"><div class="box">
+  <p class="small">A LITTLE SOMETHING, FOR YOU</p>
+  <div class="bigheart">💖</div>
+  <h1>Chuti Manika</h1>
+  <p>I made a little surprise just for you... 🎁</p>
+  <button onclick="go(1)">Tap to open</button>
+</div></section>
+
+<!-- 2: Funny Yes / No -->
+<section class="scene light" data-s="yesno"><div class="box">
+  <div class="ynemo" id="ynemo">🥺</div>
+  <h2>Chuti Manika, do you love me?</h2>
+  <p id="ynmsg" class="cap">Be honest... 😏</p>
+  <div id="yn">
+    <button id="yesb">Yes 💕</button>
+    <button id="nob">No 😈</button>
+  </div>
+</div></section>
+
+<!-- 3: "I love you" heart -->
+<section class="scene dark" data-s="iluv"><canvas class="fx" id="c1"></canvas>
+  <div class="box bottom"><h2>I love you, Chuti Manika 💗</h2></div>
+</section>
+
+<!-- 4: Sparkle heart -->
+<section class="scene dark" data-s="spark"><canvas class="fx" id="c2"></canvas>
+  <div class="box bottom"><h2>You are my brightest star ✨</h2><p>Touch the screen and make some magic</p></div>
+</section>
+
+<!-- 5: 3D carousel -->
+<section class="scene mid" data-s="ring"><div class="box">
+  <h2>Our beautiful moments 📸</h2><p>Tap the photos to pause or play</p>
+  <div class="persp"><div class="ring" id="ring"></div></div>
+</div></section>
+
+<!-- 6: Polaroid board -->
+<section class="scene pinkbg" data-s="board"><div class="box">
+  <h2>Little memories 💕</h2><p>Tap a polaroid to zoom in</p>
+  <div id="board"></div>
+</div></section>
+
+<!-- 7: Message -->
+<section class="scene mid" data-s="msg" id="s5"><div class="box"><div id="type"></div></div></section>
+
+<!-- 8: Neon pencil art -->
+<section class="scene neon" data-s="sketch"><div class="box">
+  <h2 class="nt">Drawn in neon ✨</h2>
+  <p>Tap the picture for the next one</p>
+  <div class="nframe" id="frame">
+    <img id="skc" alt="">
+    <canvas id="sk"></canvas>
+    <div id="pencil"></div>
+  </div>
+  <p id="skcap" class="cap"></p>
+</div></section>
+
+<!-- 9: Rose frame slideshow -->
+<section class="scene rosebg" data-s="kb"><div class="box">
+  <h2>Every moment with you 💞</h2>
+  <div class="rframe" id="rframe">
+    <div class="slides"><div class="sl" id="slA"></div><div class="sl" id="slB"></div></div>
+  </div>
+  <p id="kcap" class="cap"></p>
+</div></section>
+
+<!-- 10: Cake -->
+<section class="scene light" data-s="cake"><div class="box">
+  <h2>Blow out the candles 🕯️</h2><p>Tap each candle</p>
+  <div class="cake">
+    <div class="candles"><div class="candle"></div><div class="candle"></div><div class="candle"></div><div class="candle"></div></div>
+    <div class="tier t1"></div><div class="tier t2"></div><div class="tier t3"></div>
+  </div>
+  <p id="wish"></p>
+</div></section>
+
+<!-- 11: Love letter -->
+<section class="scene pinkbg" data-s="letter"><div class="box">
+  <h2>A letter for you 💌</h2><p>Tap the envelope to open it</p>
+  <div class="env" id="env">
+    <div class="paperl">
+      <b>My dearest Chuti Manika,</b><br><br>
+      Every little thing about you makes my world brighter. Your laugh, your smile, even your silly moods.<br><br>
+      Thank you for being you, and for being mine. This is only the start of all the beautiful days we will share.<br><br>
+      <span class="sign">Yours, forever ❤️</span>
+    </div>
+    <div class="flap"></div>
+    <div class="front"></div>
+    <div class="seal">💗</div>
+  </div>
+</div></section>
+
+<!-- 12: Catch the hearts game -->
+<section class="scene mid" data-s="game"><div class="box">
+  <h2>Catch my hearts 💗</h2>
+  <p id="gtxt">Tap 12 hearts. Careful with the broken ones 💔</p>
+  <div class="bar"><i id="gbar"></i></div>
+  <div id="game"></div>
+</div></section>
+
+<!-- 13: Finale -->
+<section class="scene dark" data-s="fin"><canvas class="fx" id="c3"></canvas>
+  <div class="box">
+    <div class="wreath"><div class="wr-ring" id="wr"></div><div class="circle"><img id="fin" alt=""></div></div>
+    <h1 class="glow">Happy Birthday<br>Chuti Manika 🎂</h1>
+    <p>Forever yours ❤️</p>
+  </div>
+</section>
+
+<button id="next" onclick="go(cur+1)">Next 💗</button>
+<script src="js/app.js"></script>
+</body>
+</html>
